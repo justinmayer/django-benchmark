@@ -1,0 +1,19 @@
+[project]
+name = "django-benchmark"
+version = "0.1.0"
+description = "Django performance benchmark profiler"
+readme = "README.md"
+authors = [
+    { name = "Justin Mayer", email = "entroP@gmail.com" },
+    { name = "Ontowhee", email = "82607723+ontowhee@users.noreply.github.com" },
+    { name = "Žan Anderle", email = "zan.anderle@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = []
+
+[project.scripts]
+benchmark = "benchmark:main"
+
+[build-system]
+requires = ["uv_build>=0.12.18,<0.13.0"]
+build-backend = "uv_build"
