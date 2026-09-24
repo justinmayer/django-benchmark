@@ -4,5 +4,6 @@ results/*
 __pycache__/
 *.py[cod]
 *.egg-info/
+*.sqlite3
 dist/
 build/

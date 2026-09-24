@@ -6,6 +6,7 @@ The objective of this project is to benchmark and profile the performance of the
 
 - `src/benchmark/` — harness CLI (`benchmark`)
 - `example_app/` — Django project under test
+- `scenarios/` — Locust load-test files (workload patterns)
 - `runtimes/` — named server profiles (how the app is started)
 - `constraints/` — Django version pins for a future matrix
 - `results/` — benchmark output (gitignored)
@@ -21,6 +22,14 @@ uv run benchmark setup
 That installs extras, applies `example_app` migrations, and runs `manage.py seed` (that command is not implemented yet). Use `--no-seed` to migrate only.
 
 Gunicorn and Django are optional extras. Locust is a default dependency. Running Locust is not implemented yet.
+
+## Run a scenario
+
+While serving a runtime in another tab (e.g. `uv run benchmark run gunicorn-sync`), point Locust at it:
+
+```bash
+uv run locust -f scenarios/browse.py --headless -u 5 -t 15s --host http://127.0.0.1:8000 --html results/smoke/browse.html --csv results/smoke/browse
+```
 
 ## Commands
 
