@@ -2,6 +2,7 @@
 name = "gunicorn-sync"
 command = "gunicorn"
 # args will point at example_app once the harness is wired up
-args = []
+args = ["config.wsgi"]
 bind = "127.0.0.1:8000"
 health_url = "http://127.0.0.1:8000/health"
+directory = "example_app"
