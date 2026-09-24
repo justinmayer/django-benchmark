@@ -1,6 +1,12 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from .models import Ticket
 from .forms import TicketForm
+
+
+def health(request):
+    """Liveness endpoint used by the benchmark harness before load starts."""
+    return JsonResponse({"status": "ok"})
 
 
 def ticket_list(request):
