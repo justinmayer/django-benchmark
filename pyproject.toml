@@ -13,6 +13,11 @@ dependencies = [
     "locust>=2.46.6",
 ]
 
+[project.optional-dependencies]
+gunicorn = [
+    "gunicorn>=23.0.0",
+]
+
 [project.scripts]
 benchmark = "benchmark:main"
 
