@@ -1,0 +1,7 @@
+# Placeholder runtime profile. Not wired to a WSGI app yet.
+name = "gunicorn-sync"
+command = "gunicorn"
+# args will point at example_app once the harness is wired up
+args = []
+bind = "127.0.0.1:8000"
+health_url = "http://127.0.0.1:8000/health"
