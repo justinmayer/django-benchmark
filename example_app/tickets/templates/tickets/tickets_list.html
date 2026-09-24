@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Ticket List{% endblock %}
+
+{% block content %}
+<h1>Tickets</h1>
+<a href="{% url 'ticket-create' %}" class="btn">Create Ticket</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Component</th>
+            <th>Queue</th>
+            <th>Last Updated</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ticket in tickets %}
+        <tr>
+            <td>{{ ticket.id }}</td>
+            <td>{{ ticket.title }}</td>
+            <td>{{ ticket.description }}</td>
+            <td>{{ ticket.component }}</td>
+            <td>{{ ticket.queue }}</td>
+            <td>{{ ticket.updated_at|date:"M d, Y" }}</td>
+            <td>
+                <a href="{% url 'ticket-detail' ticket.pk %}">View</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
