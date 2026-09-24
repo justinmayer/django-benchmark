@@ -25,9 +25,10 @@ Gunicorn and Django are optional extras. Locust is a default dependency. Running
 
 ```bash
 uv run benchmark setup
+uv run benchmark run gunicorn-sync
 uv run benchmark run gunicorn-sync --launcher local
 uv run benchmark run gunicorn-sync --launcher docker
 uv run benchmark compare
 ```
 
-`run` and `compare` are stubs: they do not start gunicorn or Locust yet.
+`--launcher local` starts gunicorn from `runtimes/<name>/profile.toml` (cwd `example_app`). Docker and `compare` are not implemented yet.
