@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 import argparse
+import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path.cwd()
+EXAMPLE_APP = ROOT / "example_app"
 RUNTIMES = ROOT / "runtimes"
 RESULTS = ROOT / "results"
 
@@ -13,6 +16,22 @@ def run_locust() -> None:
     # comes after the harness is wired to example_app.
     # TODO: locust -f ... --host ...
     raise NotImplementedError("locust")
+
+
+def run_manage(*args: str) -> None:
+    manage = EXAMPLE_APP / "manage.py"
+    if not manage.is_file():
+        sys.exit(f"example_app manage.py is missing: {manage}")
+    subprocess.check_call([sys.executable, str(manage), *args], cwd=EXAMPLE_APP)
+
+
+def cmd_setup(*, seed: bool) -> None:
+    print("Applying migrations...")
+    run_manage("migrate", "--noinput")
+
+    if seed:
+        print("Seeding example data...")
+        run_manage("seed")
 
 
 def cmd_run(runtime: str, launcher: str) -> None:
@@ -47,10 +66,19 @@ def main() -> None:
         help="how to start the runtime (default: docker)",
     )
 
+    setup = sub.add_parser("setup", help="migrate and seed example_app")
+    setup.add_argument(
+        "--no-seed",
+        action="store_true",
+        help="only migrate; do not create fixture rows",
+    )
+
     sub.add_parser("compare", help="compare result files (stub)")
 
     args = parser.parse_args()
     if args.command == "run":
         cmd_run(args.runtime, args.launcher)
+    elif args.command == "setup":
+        cmd_setup(seed=not args.no_seed)
     elif args.command == "compare":
         cmd_compare()
