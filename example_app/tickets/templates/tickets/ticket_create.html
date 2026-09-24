@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+<h1>Create New Ticket</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn">Save</button>
+    <a href="{% url 'ticket-list' %}">Cancel</a>
+</form>

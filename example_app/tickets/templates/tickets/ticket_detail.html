@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Ticket {{ ticket.number }}{% endblock %}
+
+{% block content %}
+<table>
+    <tr>
+        <th>ID</th>
+        <td>{{ ticket.id }}</td>
+    </tr>
+    <tr>
+        <th>Title</th>
+        <td>{{ ticket.title }}</td>
+    <tr>
+        <th>Description</th>
+        <td>{{ ticket.description }}</td>
+    </tr>
+    <tr>
+        <th>Component</th>
+        <td>{{ ticket.component }}</td>
+    </tr>
+    <tr>
+        <th>Queue</th>
+        <td>{{ ticket.queue }}</td>
+    </tr>
+    <tr>
+        <th>Updated At</th>
+        <td>{{ ticket.updated_at }}</td>
+    </tr>
+</table>
+{% endblock %}
