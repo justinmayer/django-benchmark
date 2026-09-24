@@ -13,14 +13,18 @@ The objective of this project is to benchmark and profile the performance of the
 ## Setup
 
 ```bash
-uv sync --extra gunicorn
+uv sync --extra gunicorn --extra example-app
+uv run benchmark setup
 ```
 
-Gunicorn is an optional extra. Locust is a default dependency. Running Locust is not implemented yet.
+That installs extras, applies `example_app` migrations, and runs `manage.py seed` (that command is not implemented yet). Use `--no-seed` to migrate only.
+
+Gunicorn and Django are optional extras. Locust is a default dependency. Running Locust is not implemented yet.
 
 ## Commands
 
 ```bash
+uv run benchmark setup
 uv run benchmark run gunicorn-sync --launcher local
 uv run benchmark run gunicorn-sync --launcher docker
 uv run benchmark compare

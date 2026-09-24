@@ -17,6 +17,9 @@ dependencies = [
 gunicorn = [
     "gunicorn>=23.0.0",
 ]
+example-app = [
+    "django==6.1.1",
+]
 
 [project.scripts]
 benchmark = "benchmark:main"
