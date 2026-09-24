@@ -16,6 +16,7 @@ dependencies = [
 [project.optional-dependencies]
 gunicorn = [
     "gunicorn>=23.0.0",
+    "django>=6.1.1",
 ]
 
 [project.scripts]
