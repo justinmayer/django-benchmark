@@ -2,4 +2,4 @@ name = "gunicorn-sync"
 cwd = "example_app"
 command = "gunicorn"
 args = ["config.wsgi:application", "--bind", "127.0.0.1:8000"]
-health_url = "http://127.0.0.1:8000/health"
+health_url = "http://127.0.0.1:8000/health/"
