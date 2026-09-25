@@ -1,5 +1,6 @@
 results/*
 !results/.gitkeep
+results_site/output/
 .venv/
 __pycache__/
 *.py[cod]

@@ -20,6 +20,9 @@ gunicorn = [
 example-app = [
     "django==6.1.1",
 ]
+results-site = [
+    "pelican>=4.11.0",
+]
 
 [project.scripts]
 benchmark = "benchmark:main"
