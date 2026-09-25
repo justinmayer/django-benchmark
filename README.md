@@ -19,13 +19,17 @@ uv sync --extra gunicorn --extra example-app
 uv run benchmark setup
 ```
 
-That installs extras, applies `example_app` migrations, and runs `manage.py seed` (that command is not implemented yet). Use `--no-seed` to migrate only.
+That installs extras, applies `example_app` migrations, and runs `manage.py seed`. Use `--no-seed` to migrate only.
 
-Gunicorn and Django are optional extras. Locust is a default dependency. Running Locust is not implemented yet.
+## Run a benchmark
 
-## Run a scenario
+`benchmark run` starts the runtime from `runtimes/<name>/profile.toml`, waits for its `health_url`, runs the scenario headless, and saves reports under `results/<runtime>/<scenario>/<timestamp>/`:
 
-While serving a runtime in another tab (e.g. `uv run benchmark run gunicorn-sync`), point Locust at it:
+```bash
+uv run benchmark run browse --runtime gunicorn-sync -u 20 -t 120 -r 2
+```
+
+To run a scenario without automatically spawning the runtime, point Locust at a running server:
 
 ```bash
 uv run locust -f scenarios/browse.py --headless -u 5 -t 15s --host http://127.0.0.1:8000 --html results/smoke/browse.html --csv results/smoke/browse
@@ -35,13 +39,13 @@ uv run locust -f scenarios/browse.py --headless -u 5 -t 15s --host http://127.0.
 
 ```bash
 uv run benchmark setup
-uv run benchmark run gunicorn-sync
-uv run benchmark run gunicorn-sync --launcher local
-uv run benchmark run gunicorn-sync --launcher docker
+uv run benchmark run browse --runtime gunicorn-sync
+uv run benchmark run browse --launcher local
+uv run benchmark run browse --launcher docker
 uv run benchmark compare
 ```
 
-`--launcher local` starts gunicorn from `runtimes/<name>/profile.toml` (cwd `example_app`). Docker and `compare` are not implemented yet.
+`--launcher local` (the default) starts the runtime from `runtimes/<name>/profile.toml` (cwd `example_app`). Docker and `compare` are not implemented yet.
 
 ## Results site
 
