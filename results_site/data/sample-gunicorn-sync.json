@@ -1,9 +1,0 @@
-{
-  "runtime": "gunicorn-sync",
-  "launcher": "local",
-  "django_version": "6.1.1",
-  "rps": 0,
-  "p50_ms": 0,
-  "p99_ms": 0,
-  "errors": 0
-}

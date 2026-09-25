@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import json
+import csv
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -18,28 +18,57 @@ class RunResult:
     p50_ms: float | None
     p99_ms: float | None
     errors: int | None
-    raw: dict
 
 
-def _read_json(path: Path) -> RunResult | None:
-    try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
+def _blank(value: str | None) -> str | None:
+    if value is None:
         return None
-    if not isinstance(data, dict):
-        data = {"value": data}
-    return RunResult(
-        name=path.stem,
-        source=str(path),
-        runtime=data.get("runtime"),
-        launcher=data.get("launcher"),
-        django_version=data.get("django_version"),
-        rps=data.get("rps"),
-        p50_ms=data.get("p50_ms"),
-        p99_ms=data.get("p99_ms"),
-        errors=data.get("errors"),
-        raw=data,
-    )
+    value = value.strip()
+    return value or None
+
+
+def _float(value: str | None) -> float | None:
+    value = _blank(value)
+    if value is None:
+        return None
+    return float(value)
+
+
+def _int(value: str | None) -> int | None:
+    value = _blank(value)
+    if value is None:
+        return None
+    return int(float(value))
+
+
+def _read_csv(path: Path) -> list[RunResult]:
+    runs: list[RunResult] = []
+    try:
+        with path.open(newline="", encoding="utf-8") as file:
+            rows = list(csv.DictReader(file))
+    except OSError:
+        return []
+    for index, row in enumerate(rows, start=1):
+        name = _blank(row.get("name")) or (
+            path.stem if len(rows) == 1 else f"{path.stem}-{index}"
+        )
+        try:
+            runs.append(
+                RunResult(
+                    name=name,
+                    source=str(path),
+                    runtime=_blank(row.get("runtime")),
+                    launcher=_blank(row.get("launcher")),
+                    django_version=_blank(row.get("django_version")),
+                    rps=_float(row.get("rps")),
+                    p50_ms=_float(row.get("p50_ms")),
+                    p99_ms=_float(row.get("p99_ms")),
+                    errors=_int(row.get("errors")),
+                )
+            )
+        except (TypeError, ValueError):
+            continue
+    return runs
 
 
 def load_runs(settings: dict) -> list[RunResult]:
@@ -52,14 +81,11 @@ def load_runs(settings: dict) -> list[RunResult]:
     for directory in dirs:
         if not directory.is_dir():
             continue
-        for path in sorted(directory.glob("*.json")):
+        for path in sorted(directory.glob("*.csv")):
             if path.name in seen:
                 continue
-            result = _read_json(path)
-            if result is None:
-                continue
             seen.add(path.name)
-            runs.append(result)
+            runs.extend(_read_csv(path))
     return runs
 
 

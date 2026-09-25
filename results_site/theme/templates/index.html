@@ -16,7 +16,7 @@
 </head>
 <body>
   <h1>{{ SITENAME }} results</h1>
-  <p>Static snapshot built with Pelican. JSON files come from the repo <code>results/</code> directory, plus sample data under <code>results_site/data/</code>.</p>
+  <p>Static snapshot built with Pelican. CSV files come from the repo <code>results/</code> directory, plus sample data under <code>results_site/data/</code>.</p>
   {% if runs %}
   <table>
     <thead>
@@ -47,7 +47,7 @@
     </tbody>
   </table>
   {% else %}
-  <p class="empty">No result JSON files found. Put files in <code>results/*.json</code> and run Pelican again.</p>
+  <p class="empty">No result CSV files found. Put files in <code>results/*.csv</code> and run Pelican again.</p>
   {% endif %}
 </body>
 </html>
