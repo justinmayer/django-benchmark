@@ -129,6 +129,7 @@ def run_locust(
     users: int,
     duration: int,
     spawn_rate: float,
+    aggregated_only: bool,
     report_dir: Path,
 ) -> int:
     locustfile = SCENARIOS / f"{scenario}.py"
@@ -154,6 +155,7 @@ def run_locust(
         str(report_dir / "report.html"),
         "--csv",
         str(report_dir / "run"),
+        *(["--csv-full-history"] if not aggregated_only else []),
     ]
     print(f"Running Locust: {' '.join(argv)}", flush=True)
     return subprocess.call(argv)
@@ -166,6 +168,7 @@ def cmd_run(
     users: int,
     duration: int,
     spawn_rate: float,
+    aggregated_only: bool,
 ) -> None:
     if launcher == "docker":
         sys.exit("Docker launcher is not implemented yet.")
@@ -199,7 +202,7 @@ def cmd_run(
             sys.exit(1)
 
         print(f"Runtime healthy at {health_url}", flush=True)
-        exit_code = run_locust(scenario, host, users, duration, spawn_rate, report_dir)
+        exit_code = run_locust(scenario, host, users, duration, spawn_rate, aggregated_only, report_dir)
     finally:
         stop_runtime(proc)
 
@@ -253,6 +256,11 @@ def main() -> None:
         default=1.0,
         help="users spawned per second (default: 1.0)",
     )
+    run.add_argument(
+        "--aggregated-only",
+        action="store_true",
+        help="write only aggregated stats in CSV report (skip per-second history)",
+    )
 
     setup = sub.add_parser("setup", help="migrate and seed example_app")
     setup.add_argument(
@@ -273,6 +281,7 @@ def main() -> None:
             args.users,
             args.duration,
             args.spawn_rate,
+            args.aggregated_only,
         )
     elif args.command == "setup":
         cmd_setup(seed=not args.no_seed)
