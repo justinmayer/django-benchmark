@@ -9,6 +9,7 @@ The objective of this project is to benchmark and profile the performance of the
 - `runtimes/` — named server profiles (how the app is started)
 - `constraints/` — Django version pins for a future matrix
 - `results/` — benchmark output (gitignored)
+- `results_site/` — Pelican project that builds those results into static HTML
 
 ## Setup
 
@@ -32,3 +33,14 @@ uv run benchmark compare
 ```
 
 `--launcher local` starts gunicorn from `runtimes/<name>/profile.toml` (cwd `example_app`). Docker and `compare` are not implemented yet.
+
+## Results site
+
+Pelican is an optional extra on the same lockfile. It does not use Django, so it does not conflict with the `example-app` Django pin.
+
+```bash
+uv sync --extra results-site
+uv run pelican --settings results_site/pelicanconf.py
+```
+
+See [`results_site/README.md`](results_site/README.md).
