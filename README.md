@@ -29,6 +29,8 @@ That installs extras, applies `example_app` migrations, and runs `manage.py seed
 uv run benchmark run browse --runtime gunicorn-sync -u 20 -t 120 -r 2
 ```
 
+By default the benchmark writes per-second history and aggregated rows to the statistics history CSV file. Use the `--aggregated-only` option to instead only write the aggregated rows.
+
 To run a scenario without automatically spawning the runtime, point Locust at a running server:
 
 ```bash
