@@ -30,7 +30,6 @@ ARCHIVES_SAVE_AS = ""
 PLUGIN_PATHS = [str(SITE_ROOT / "plugins")]
 PLUGINS = ["results"]
 
-BENCHMARK_RESULTS_DIR = REPO_ROOT / "results"
-SAMPLE_RESULTS_DIR = SITE_ROOT / "data"
+BENCHMARK_RESULTS_DIR = REPO_ROOT / "results" / "published"
 
 DELETE_OUTPUT_DIRECTORY = True

@@ -72,20 +72,12 @@ def _read_csv(path: Path) -> list[RunResult]:
 
 
 def load_runs(settings: dict) -> list[RunResult]:
-    dirs = [
-        Path(settings["BENCHMARK_RESULTS_DIR"]),
-        Path(settings["SAMPLE_RESULTS_DIR"]),
-    ]
+    directory = Path(settings["BENCHMARK_RESULTS_DIR"])
+    if not directory.is_dir():
+        return []
     runs: list[RunResult] = []
-    seen: set[str] = set()
-    for directory in dirs:
-        if not directory.is_dir():
-            continue
-        for path in sorted(directory.glob("*.csv")):
-            if path.name in seen:
-                continue
-            seen.add(path.name)
-            runs.extend(_read_csv(path))
+    for path in sorted(directory.rglob("*.csv")):
+        runs.extend(_read_csv(path))
     return runs
 
 

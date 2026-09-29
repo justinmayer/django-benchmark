@@ -9,8 +9,9 @@ The objective of this project is to benchmark and profile the performance of the
 - `scenarios/` — Locust load-test files (workload patterns)
 - `runtimes/` — named server profiles (how the app is started)
 - `constraints/` — Django version pins for a future matrix
-- `results/` — benchmark output (gitignored)
-- `results_site/` — Pelican project that builds those results into static HTML
+- `results/` — local benchmark output (gitignored)
+- `results/published/` — CSVs committed for the results site
+- `results_site/` — Pelican project that builds those published results into static HTML
 
 ## Setup
 
