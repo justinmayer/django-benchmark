@@ -239,7 +239,7 @@ def latest_run_dir() -> Path:
     return max(runs, key=lambda path: path.name)
 
 
-def cmd_publish() -> None:
+def cmd_save_results() -> None:
     source = latest_run_dir()
     dest = PUBLISHED / source.relative_to(RESULTS)
     if dest.exists():
@@ -305,7 +305,7 @@ def main() -> None:
 
     sub.add_parser("compare", help="compare result files (stub)")
     sub.add_parser(
-        "publish",
+        "save-results",
         help="copy the latest local run under results/ into results/published/",
     )
 
@@ -325,5 +325,5 @@ def main() -> None:
         cmd_setup(seed=not args.no_seed)
     elif args.command == "compare":
         cmd_compare()
-    elif args.command == "publish":
-        cmd_publish()
+    elif args.command == "save-results":
+        cmd_save_results()

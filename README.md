@@ -46,12 +46,12 @@ uv run benchmark run browse --runtime gunicorn-sync
 uv run benchmark run browse --launcher local
 uv run benchmark run browse --launcher docker
 uv run benchmark compare
-uv run benchmark publish
+uv run benchmark save-results
 ```
 
 `--launcher local` (the default) starts the runtime from `runtimes/<name>/profile.toml` (cwd `example_app`). Docker and `compare` are not implemented yet.
 
-`benchmark publish` copies the latest local run (`results/<runtime>/<scenario>/<timestamp>/`) into `results/published/` so it can be committed and picked up by the results site.
+`benchmark save-results` copies the latest local run (`results/<runtime>/<scenario>/<timestamp>/`) into `results/published/` so it can be committed and picked up by the results site.
 
 ## Results site
 
