@@ -22,4 +22,4 @@ Output is `results_site/output/`. Preview with:
 uv run pelican --listen --settings results_site/pelicanconf.py
 ```
 
-CSV files in `results/published/` (and subfolders) are listed on the index. Copy a local run there when you want it on the site and in git. Other files under `results/` stay gitignored.
+CSV files in `results/published/` (and subfolders) are listed on the index. Copy the latest local run there with `uv run benchmark publish`. Other files under `results/` stay gitignored.

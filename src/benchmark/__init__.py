@@ -19,6 +19,7 @@ EXAMPLE_APP = ROOT / "example_app"
 RUNTIMES = ROOT / "runtimes"
 SCENARIOS = ROOT / "scenarios"
 RESULTS = ROOT / "results"
+PUBLISHED = RESULTS / "published"
 
 HEALTH_TIMEOUT = 30.0
 STOP_TIMEOUT = 10.0
@@ -215,6 +216,39 @@ def cmd_compare() -> None:
     print("No result files yet; compare is a stub.")
 
 
+def iter_run_dirs() -> list[Path]:
+    runs: list[Path] = []
+    if not RESULTS.is_dir():
+        return runs
+    for runtime_dir in RESULTS.iterdir():
+        if not runtime_dir.is_dir() or runtime_dir.name == "published":
+            continue
+        for scenario_dir in runtime_dir.iterdir():
+            if not scenario_dir.is_dir():
+                continue
+            for run_dir in scenario_dir.iterdir():
+                if run_dir.is_dir():
+                    runs.append(run_dir)
+    return runs
+
+
+def latest_run_dir() -> Path:
+    runs = iter_run_dirs()
+    if not runs:
+        sys.exit(f"No local result runs found under {RESULTS} (excluding published/).")
+    return max(runs, key=lambda path: path.name)
+
+
+def cmd_publish() -> None:
+    source = latest_run_dir()
+    dest = PUBLISHED / source.relative_to(RESULTS)
+    if dest.exists():
+        shutil.rmtree(dest)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(source, dest)
+    print(f"Copied {source} -> {dest}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         prog="benchmark",
@@ -270,6 +304,10 @@ def main() -> None:
     )
 
     sub.add_parser("compare", help="compare result files (stub)")
+    sub.add_parser(
+        "publish",
+        help="copy the latest local run under results/ into results/published/",
+    )
 
     args = parser.parse_args()
     if args.command == "run":
@@ -287,3 +325,5 @@ def main() -> None:
         cmd_setup(seed=not args.no_seed)
     elif args.command == "compare":
         cmd_compare()
+    elif args.command == "publish":
+        cmd_publish()
