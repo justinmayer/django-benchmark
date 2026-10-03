@@ -1,6 +1,30 @@
 # Django Benchmark
 
-The objective of this project is to benchmark and profile the performance of the [Django web framework](https://www.djangoproject.com).
+The objective of this project is to benchmark and profile different kinds of
+[Django] application, under different deployment runtimes.
+
+For example, you might have a blog or CMS-based application that has a very
+different profile from a write-heavy JSON API.
+
+Similarly, each application is likely to display different performance
+behaviours when deployed under different runtimes: sync with pre-forked
+workers, sync with threaded workers, under free-threading, under async, and so
+on.
+
+The goal is to be able to give guidance as to the performance you can expect,
+and the best way to deploy **your application**. Something a little more
+sophisticated than the typical "Look how fast!" requests-per-second benchmark.
+
+[Django]: https://www.djangoproject.com
+
+## Status
+
+This project was begun at Django on the Med 🏖️ in Pescara, Italy, in October 2026.
+
+It's currently a _path in the snow_: a thin end-to-end slice. A lot to do, but
+the ground is broken. Join in! 👊
+
+(Working on the project? Update this section as you go!)
 
 ## Layout
 
