@@ -1,0 +1,11 @@
+[2026-09-29 17:26:26 +0200] [59483] [INFO] Starting gunicorn 26.2.0
+[2026-09-29 17:26:26 +0200] [59483] [INFO] Listening at: http://127.0.0.1:8000 (59483)
+[2026-09-29 17:26:26 +0200] [59483] [INFO] Using worker: sync
+[2026-09-29 17:26:26 +0200] [59484] [INFO] Booting worker with pid: 59484
+[2026-09-29 17:26:27 +0200] [59483] [INFO] Control socket listening at /Users/zananderle/.gunicorn/gunicorn.ctl
+Not Found: /
+Not Found: /json/version
+[2026-09-29 17:26:57 +0200] [59483] [INFO] Handling signal: term
+[2026-09-29 15:26:57 +0000] [59484] [INFO] Worker exiting (pid: 59484)
+[2026-09-29 17:26:57 +0200] [59483] [INFO] Worker (pid:59484) was sent SIGTERM!
+[2026-09-29 17:26:58 +0200] [59483] [INFO] Shutting down: Master

@@ -22,4 +22,4 @@ Output is `results_site/output/`. Preview with:
 uv run pelican --listen --settings results_site/pelicanconf.py
 ```
 
-CSV files in repo-root `results/*.csv` are listed on the index. Sample rows live in `data/` so the table is not empty before real benchmarks exist.
+CSV files in `results/published/` (and subfolders) are listed on the index. Copy the latest local run there with `uv run benchmark save-results`. Other files under `results/` stay gitignored.

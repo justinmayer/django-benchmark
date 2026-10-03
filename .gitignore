@@ -1,5 +1,7 @@
 results/*
 !results/.gitkeep
+!results/published/
+!results/published/**
 .venv/
 __pycache__/
 *.py[cod]

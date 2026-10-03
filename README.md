@@ -27,8 +27,9 @@ It's currently a _path in the snow_: a thin end-to-end slice. A lot to do, but t
 - `scenarios/` — Locust load-test files (workload patterns)
 - `runtimes/` — named server profiles (how the app is started)
 - `constraints/` — Django version pins for a future matrix
-- `results/` — benchmark output (gitignored)
-- `results_site/` — Pelican project that builds those results into static HTML
+- `results/` — local benchmark output (gitignored)
+- `results/published/` — CSVs committed for the results site
+- `results_site/` — Pelican project that builds those published results into static HTML
 
 ## Setup
 
@@ -63,9 +64,12 @@ uv run benchmark run browse --runtime gunicorn-sync
 uv run benchmark run browse --launcher local
 uv run benchmark run browse --launcher docker
 uv run benchmark compare
+uv run benchmark save-results
 ```
 
 `--launcher local` (the default) starts the runtime from `runtimes/<name>/profile.toml` (cwd `example_app`). Docker and `compare` are not implemented yet.
+
+`benchmark save-results` copies the latest local run (`results/<runtime>/<scenario>/<timestamp>/`) into `results/published/` so it can be committed and picked up by the results site.
 
 ## Results site
 
