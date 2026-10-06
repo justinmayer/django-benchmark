@@ -47,11 +47,14 @@ uv run benchmark run browse --launcher local
 uv run benchmark run browse --launcher docker
 uv run benchmark compare
 uv run benchmark save-results
+uv run benchmark preprocess
 ```
 
 `--launcher local` (the default) starts the runtime from `runtimes/<name>/profile.toml` (cwd `example_app`). Docker and `compare` are not implemented yet.
 
-`benchmark save-results` copies the latest local run (`results/<runtime>/<scenario>/<timestamp>/`) into `results/published/` so it can be committed and picked up by the results site.
+`benchmark save-results` copies the latest local run (`results/<runtime>/<scenario>/<timestamp>/`) into `results/published/` so it can be committed.
+
+`benchmark preprocess` writes `results_site/data/table.json` from those published runs. The results site reads that file.
 
 ## Results site
 
@@ -59,6 +62,7 @@ Pelican is an optional extra on the same lockfile. It does not use Django, so it
 
 ```bash
 uv sync --extra results-site
+uv run benchmark preprocess
 uv run pelican --settings results_site/pelicanconf.py
 ```
 

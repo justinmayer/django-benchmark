@@ -239,6 +239,14 @@ def latest_run_dir() -> Path:
     return max(runs, key=lambda path: path.name)
 
 
+def cmd_preprocess() -> None:
+    from benchmark.preprocess import write_table
+
+    destination = ROOT / "results_site" / "data" / "table.json"
+    write_table(PUBLISHED, destination)
+    print(f"Wrote {destination}")
+
+
 def cmd_save_results() -> None:
     source = latest_run_dir()
     dest = PUBLISHED / source.relative_to(RESULTS)
@@ -308,6 +316,10 @@ def main() -> None:
         "save-results",
         help="copy the latest local run under results/ into results/published/",
     )
+    sub.add_parser(
+        "preprocess",
+        help="write results_site/data/table.json from results/published/",
+    )
 
     args = parser.parse_args()
     if args.command == "run":
@@ -327,3 +339,5 @@ def main() -> None:
         cmd_compare()
     elif args.command == "save-results":
         cmd_save_results()
+    elif args.command == "preprocess":
+        cmd_preprocess()
