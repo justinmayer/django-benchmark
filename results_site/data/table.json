@@ -1,0 +1,47 @@
+{
+  "runtimes": [
+    {
+      "name": "gunicorn-sync",
+      "scenarios": [
+        {
+          "name": "browse",
+          "description": "Read-heavy ticket browsing: GET /tickets/ and GET /tickets/<id>/.",
+          "levels": [
+            {
+              "users": 5,
+              "requests_per_second": 3.8331069199804415,
+              "average_response_time_ms": 5.845127703452652,
+              "p50_ms": 6.0,
+              "p95_ms": 10.0,
+              "p99_ms": 12.0
+            },
+            {
+              "users": 10,
+              "requests_per_second": null,
+              "average_response_time_ms": null,
+              "p50_ms": null,
+              "p95_ms": null,
+              "p99_ms": null
+            },
+            {
+              "users": 100,
+              "requests_per_second": null,
+              "average_response_time_ms": null,
+              "p50_ms": null,
+              "p95_ms": null,
+              "p99_ms": null
+            },
+            {
+              "users": 1000,
+              "requests_per_second": null,
+              "average_response_time_ms": null,
+              "p50_ms": null,
+              "p95_ms": null,
+              "p99_ms": null
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

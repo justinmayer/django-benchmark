@@ -1,89 +1,24 @@
 from __future__ import annotations
 
-import csv
-from dataclasses import dataclass
 from pathlib import Path
 
 from pelican import signals
 
-
-@dataclass(frozen=True)
-class RunResult:
-    name: str
-    source: str
-    runtime: str | None
-    launcher: str | None
-    django_version: str | None
-    rps: float | None
-    p50_ms: float | None
-    p99_ms: float | None
-    errors: int | None
+from benchmark.preprocess import read_table
 
 
-def _blank(value: str | None) -> str | None:
+def format_metric(value: float | None) -> str:
     if value is None:
-        return None
-    value = value.strip()
-    return value or None
+        return "—"
+    rendered = f"{value:.2f}".rstrip("0").rstrip(".")
+    return rendered or "0"
 
 
-def _float(value: str | None) -> float | None:
-    value = _blank(value)
-    if value is None:
-        return None
-    return float(value)
-
-
-def _int(value: str | None) -> int | None:
-    value = _blank(value)
-    if value is None:
-        return None
-    return int(float(value))
-
-
-def _read_csv(path: Path) -> list[RunResult]:
-    runs: list[RunResult] = []
-    try:
-        with path.open(newline="", encoding="utf-8") as file:
-            rows = list(csv.DictReader(file))
-    except OSError:
-        return []
-    for index, row in enumerate(rows, start=1):
-        name = _blank(row.get("name")) or (
-            path.stem if len(rows) == 1 else f"{path.stem}-{index}"
-        )
-        try:
-            runs.append(
-                RunResult(
-                    name=name,
-                    source=str(path),
-                    runtime=_blank(row.get("runtime")),
-                    launcher=_blank(row.get("launcher")),
-                    django_version=_blank(row.get("django_version")),
-                    rps=_float(row.get("rps")),
-                    p50_ms=_float(row.get("p50_ms")),
-                    p99_ms=_float(row.get("p99_ms")),
-                    errors=_int(row.get("errors")),
-                )
-            )
-        except (TypeError, ValueError):
-            continue
-    return runs
-
-
-def load_runs(settings: dict) -> list[RunResult]:
-    directory = Path(settings["BENCHMARK_RESULTS_DIR"])
-    if not directory.is_dir():
-        return []
-    runs: list[RunResult] = []
-    for path in sorted(directory.rglob("*.csv")):
-        runs.extend(_read_csv(path))
-    return runs
-
-
-def add_runs(generator) -> None:
-    generator.context["runs"] = load_runs(generator.settings)
+def add_scenarios(generator) -> None:
+    path = Path(generator.settings["BENCHMARK_TABLE"])
+    generator.context["runtimes"] = read_table(path)
+    generator.env.filters["metric"] = format_metric
 
 
 def register() -> None:
-    signals.generator_init.connect(add_runs)
+    signals.generator_init.connect(add_scenarios)

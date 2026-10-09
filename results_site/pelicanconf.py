@@ -1,7 +1,6 @@
 from pathlib import Path
 
 SITE_ROOT = Path(__file__).resolve().parent
-REPO_ROOT = SITE_ROOT.parent
 
 AUTHOR = "django-benchmark"
 SITENAME = "Django Benchmark"
@@ -30,6 +29,6 @@ ARCHIVES_SAVE_AS = ""
 PLUGIN_PATHS = [str(SITE_ROOT / "plugins")]
 PLUGINS = ["results"]
 
-BENCHMARK_RESULTS_DIR = REPO_ROOT / "results" / "published"
+BENCHMARK_TABLE = SITE_ROOT / "data" / "table.json"
 
 DELETE_OUTPUT_DIRECTORY = True
