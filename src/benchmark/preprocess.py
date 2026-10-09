@@ -11,18 +11,13 @@ window should feed the same file.
 from __future__ import annotations
 
 import csv
-import importlib.util
 import json
-import sys
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
 # Sub-rows every scenario gets. A published run at another user count is
 # included as well, so partial data still appears.
 EXPECTED_USER_COUNTS = (10, 100, 1000)
-
-REPO_ROOT = Path(__file__).resolve().parents[2]
-SCENARIOS = REPO_ROOT / "scenarios"
 
 WORKLOADS = {
     "browse": "Read-heavy ticket browsing: GET /tickets/ and GET /tickets/<id>/.",
@@ -181,16 +176,9 @@ class TableLevel:
 
 
 @dataclass(frozen=True)
-class ScenarioSetting:
-    name: str
-    value: str
-
-
-@dataclass(frozen=True)
 class TableScenario:
     name: str
     description: str
-    settings: tuple[ScenarioSetting, ...]
     levels: tuple[TableLevel, ...]
 
 
@@ -213,60 +201,6 @@ def _table_level(users: int | None, run: RunMetrics | None) -> TableLevel:
     )
 
 
-def _format_number(value: float) -> str:
-    text = f"{float(value):.4f}".rstrip("0").rstrip(".")
-    return text or "0"
-
-
-def _format_wait_time(wait_time: object) -> str | None:
-    """Render Locust's ``between`` / ``constant`` without turning it into a sentence."""
-    code = getattr(wait_time, "__code__", None)
-    closure = getattr(wait_time, "__closure__", None)
-    if code is None or not closure:
-        return None
-    bound = {name: cell.cell_contents for name, cell in zip(code.co_freevars, closure, strict=True)}
-    if "min_wait" in bound and "max_wait" in bound:
-        return f"between({_format_number(bound['min_wait'])}, {_format_number(bound['max_wait'])})"
-    if set(bound) == {"wait_time"}:
-        return f"constant({_format_number(bound['wait_time'])})"
-    return None
-
-
-def _scenario_user(scenario: str) -> type | None:
-    path = SCENARIOS / f"{scenario}.py"
-    if not path.is_file():
-        return None
-    scenarios = str(SCENARIOS)
-    if scenarios not in sys.path:
-        sys.path.insert(0, scenarios)
-    spec = importlib.util.spec_from_file_location(f"benchmark_scenario_{scenario}", path)
-    if spec is None or spec.loader is None:
-        return None
-    module = importlib.util.module_from_spec(spec)
-    try:
-        spec.loader.exec_module(module)
-        from locust import User
-    except Exception:
-        return None
-    classes = [
-        obj
-        for obj in vars(module).values()
-        if isinstance(obj, type) and issubclass(obj, User) and not getattr(obj, "abstract", False)
-    ]
-    return classes[0] if classes else None
-
-
-def scenario_settings(scenario: str) -> tuple[ScenarioSetting, ...]:
-    """Locust user settings worth showing next to a scenario. Not every User attribute."""
-    user_cls = _scenario_user(scenario)
-    if user_cls is None:
-        return ()
-    wait_time = _format_wait_time(getattr(user_cls, "wait_time", None))
-    if wait_time is None:
-        return ()
-    return (ScenarioSetting("wait_time", wait_time),)
-
-
 def _scenario_table(group: ScenarioResults) -> TableScenario:
     by_users = {run.users: run for run in group.runs}
     user_counts = set(EXPECTED_USER_COUNTS)
@@ -275,12 +209,7 @@ def _scenario_table(group: ScenarioResults) -> TableScenario:
     if None in by_users:
         levels.append(_table_level(None, by_users[None]))
     workload = WORKLOADS.get(group.scenario, group.scenario.replace("-", " "))
-    return TableScenario(
-        name=group.scenario,
-        description=workload,
-        settings=scenario_settings(group.scenario),
-        levels=tuple(levels),
-    )
+    return TableScenario(name=group.scenario, description=workload, levels=tuple(levels))
 
 
 def build_table(published: Path) -> list[TableRuntime]:

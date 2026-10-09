@@ -98,11 +98,6 @@
       font-size: 0.92rem;
     }
     .note { margin: 0.9rem 0 0; font-size: 0.9rem; }
-    .note p { margin: 0.35rem 0 0; }
-    .note p:first-child { margin-top: 0; }
-    .setting-name {
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    }
     .table-wrap { overflow-x: auto; }
     table {
       border-collapse: collapse;
@@ -189,21 +184,7 @@
     </section>
     {% endfor %}
   </div>
-  <div class="note">
-    {% set shown = namespace(keys=[]) %}
-    {% for runtime in runtimes %}
-      {% for scenario in runtime.scenarios %}
-        {% for setting in scenario.settings %}
-          {% set key = setting.name ~ "=" ~ setting.value %}
-          {% if key not in shown.keys %}
-          <p><span class="setting-name">{{ setting.name|e }}</span> {{ setting.value|e }}</p>
-          {% set _ = shown.keys.append(key) %}
-          {% endif %}
-        {% endfor %}
-      {% endfor %}
-    {% endfor %}
-    <p>Response times are milliseconds. A dash means that concurrent-user level has no published run yet. Figures are the Locust run total, not a trimmed steady-state window.</p>
-  </div>
+  <p class="note">Response times are milliseconds. A dash means that concurrent-user level has no published run yet. Figures are the Locust run total, not a trimmed steady-state window.</p>
   {% else %}
   <p class="empty">No table found. Run <code>benchmark preprocess</code>, then build again.</p>
   {% endif %}

@@ -6,12 +6,6 @@
         {
           "name": "browse",
           "description": "Read-heavy ticket browsing: GET /tickets/ and GET /tickets/<id>/.",
-          "settings": [
-            {
-              "name": "wait_time",
-              "value": "between(0.5, 2)"
-            }
-          ],
           "levels": [
             {
               "users": 5,
